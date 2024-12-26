@@ -11,15 +11,15 @@ public static partial class Program
         {
             new OffsetDefinition("loot_list").WithFieldName("LootList"),
             new OffsetDefinition("registered_players").WithFieldName("RegisteredPlayers"),
-            new OffsetDefinition("exfil_controller").WithUnknownType().WithFieldFilter(c => c.First()),
+            new OffsetDefinition("exfil_controller").WithFieldName("exfiltrationControllerClass"),
             new OffsetDefinition("grenades").WithFieldName("Grenades")
         }).WithNamespace("EFT").WithClass("GameWorld"),
 
         // [Class] -.GClass0B5E
         new NamespaceDefinition("exfil_controller", new()
         {
-            new OffsetDefinition("points").WithType("EFT.Interactive.ExfiltrationPoint[]"),
-            new OffsetDefinition("scav_points").WithType("EFT.Interactive.ScavExfiltrationPoint[]"),
+            new OffsetDefinition("points").WithType("EFT.Interactive.ExfiltrationPoint[]").WithFieldName("exfiltrationPoint_0"),
+            new OffsetDefinition("scav_points").WithType("EFT.Interactive.ScavExfiltrationPoint[]").WithFieldName("scavExfiltrationPoint_0"),
         }, new()
         {
             new NamespaceDefinition("_point", new()
@@ -45,7 +45,7 @@ public static partial class Program
         new NamespaceDefinition("player", new()
         {
             new OffsetDefinition("action").WithType("System.Action<Single, Single, Int32>").WithFieldFilter(c => c.First()),
-            new OffsetDefinition("movement_context").WithUnknownFieldName().WithUnknownType().WithFieldFilter(c => c.First()),
+            new OffsetDefinition("movement_context").WithFieldName("<MovementContext>k__BackingField"),
             new OffsetDefinition("profile").WithType("EFT.Profile"),
             new OffsetDefinition("pwa").WithType("EFT.Animations.ProceduralWeaponAnimation"),
             new OffsetDefinition("body").WithType("EFT.PlayerBody"),
@@ -54,7 +54,7 @@ public static partial class Program
             new OffsetDefinition("is_local_player").WithType("Boolean").WithFieldFilter(c => c.Last()),
             new OffsetDefinition("hands_controller").WithFieldName("_handsController"),
             // [Class] -.PlayerBones : MonoBehaviour
-            new OffsetDefinition("PlayerBones").WithFieldName("PlayerBones")
+            new OffsetDefinition("PlayerBones").WithFieldName("<PlayerBones>k__BackingField")
         }, new List<NamespaceDefinition>()
         {
             new NamespaceDefinition("_player_bones", new() {
@@ -126,16 +126,16 @@ public static partial class Program
         // [Class] EFT.Profile
         new NamespaceDefinition("profile", new()
         {
-            new OffsetDefinition("info").WithFieldName("Info").WithUnknownType(),
-            new OffsetDefinition("skills").WithFieldName("Skills").WithUnknownType()
+            new OffsetDefinition("info").WithFieldFilter(fields => fields.FirstOrDefault(f => f.Name == "Info")), //POSSIBLY WRONG
+            new OffsetDefinition("skills").WithFieldFilter(fields => fields.FirstOrDefault(f => f.Name == "Skills")) //POSSIBLY WRONG
         }, new List<NamespaceDefinition>()
         {
             new NamespaceDefinition("_info", new()
             {
                 new OffsetDefinition("Nickname").WithFieldName("Nickname"),
                 new OffsetDefinition("GroupId").WithFieldName("GroupId"),
-                new OffsetDefinition("Settings").WithFieldName("Settings"),
-                new OffsetDefinition("Side").WithFieldName("Side"),
+                new OffsetDefinition("Settings").WithFieldName("profileInfoSettingsClass"),
+                new OffsetDefinition("Side").WithFieldName("eplayerSide_0"),
                 new OffsetDefinition("RegistrationDate").WithFieldName("RegistrationDate"),
             }, new()
             {
@@ -189,8 +189,8 @@ public static partial class Program
             // [Class] -.ShotEffector
             new NamespaceDefinition("recoil", new()
             {
-                new OffsetDefinition("itensity").WithFieldName("Intensity")
-            }).WithNamespace("-").WithClass("ShotEffector"),
+                new OffsetDefinition("intensity").WithFieldName("IntensityMultiplicator").FromParentType("RecoilShotVal")
+            }).WithNamespace("-").WithClass("RecoilShotVal"),
 
             // [Class] -.WalkEffector : Object, IEffector
             new NamespaceDefinition("_walk", new()
